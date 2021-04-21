@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class BucketNode {
   public BucketNodeData data;
   public BucketNode next;
@@ -13,6 +15,26 @@ public class BucketNode {
     this.next = node;
   }
 
+  public BucketNodeData[] getSortedArray() {
+    BucketNode cur = this;
+    int count = 0;
+    while (cur != null) {
+      count++;
+      cur = cur.next;
+    }
+
+    BucketNodeData[] arr = new BucketNodeData[count];
+    cur = this;
+    count = 0;
+    while (cur != null) {
+      arr[count] = cur.data;
+      count++;
+      cur = cur.next;
+    }
+    Arrays.sort(arr);
+    return arr;
+  }
+
   public String toString() {
     BucketNode node = this;
     String retVal = "";
@@ -21,15 +43,5 @@ public class BucketNode {
       node = node.next;
     }
     return retVal;
-  }
-
-  private class BucketNodeData {
-    public String key;
-    public String value;
-
-    public BucketNodeData (String key, String value) {
-      this.key = key;
-      this.value = value;
-    }
   }
 }
