@@ -13,5 +13,15 @@ public class Hash_LSM_Driver {
     lsm.insert("ergeg", "g");
     lsm.insert("elkkufh", "h");
     lsm.insert("wejhf", "i");
+    lsm.insert("qweqwef", "j");
+    lsm.insert("htryjku", "k");
+    lsm.insert("uuipp;o", "l");
+    lsm.insert("bfgdfgh", "m");
+    lsm.insert("bfgbg", "n");
+    lsm.insert("csdf", "o");
+    lsm.insert("vfdrr", "p");
+    lsm.insert("cdasdff", "q");
+    lsm.insert("ergrhyuj", "r");
+    System.out.println(lsm.search("ergrhyuj"));
   }
 }

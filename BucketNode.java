@@ -15,6 +15,17 @@ public class BucketNode {
     this.next = node;
   }
 
+  public String search (String key) {
+    BucketNode cur = this;
+    while (cur != null) {
+      if (cur.data.key.equals(key)) {
+        return cur.data.value;
+      }
+      cur = cur.next;
+    }
+    return null;
+  }
+
   public BucketNodeData[] getSortedArray() {
     BucketNode cur = this;
     int count = 0;
