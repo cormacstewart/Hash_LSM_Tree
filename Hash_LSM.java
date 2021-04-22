@@ -1,5 +1,7 @@
 import java.io.*;
 import java.lang.Math;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Hash_LSM {
   public final int TABLE_SIZE = 10; //number of values to take before flushing to disk
@@ -61,13 +63,107 @@ public class Hash_LSM {
 
   public String search (String key) {
     int hash = Math.abs(key.hashCode())%TABLE_SIZE;
-    String retVal = c0[hash].search(key);
-    if (retVal != null) {
-      return retVal;
+    String retVal;
+    
+    //if data is in c0 then return it
+    if (c0[hash] != null) {
+      retVal = c0[hash].search(key);
+      if (retVal != null) {
+        return retVal;
+      }
+    }
+    //if data not in c0 then searchdisk 
+    retVal = searchDisk(key, hash);
+    return retVal;
+  }
+
+  //searches disk for specific key
+  public String searchDisk(String key, int hash) {
+    try {
+      //get partitian pointers from root file
+      int[] root = new int[TABLE_SIZE];
+      reader = new FileReader("root.txt");
+      bufferedReader = new BufferedReader(reader);
+      String line;
+      
+      int count = 0;
+        while ((line = bufferedReader.readLine()) != null) {
+          int index = Integer.parseInt(line);
+          root[count] = index;
+          count++;
+        }
+      reader.close();
+
+      System.out.println("hi");
+      //load data from run in c1 corresponding to hash index
+      reader = new FileReader("data.txt");
+      bufferedReader = new BufferedReader(reader);
+      int numRecords = Integer.parseInt(bufferedReader.readLine());
+      int runSize;
+      if (hash != TABLE_SIZE-1) {
+        runSize = root[hash+1] - root[hash];
+      } else {
+        runSize = numRecords - root[hash];
+      }
+      BucketNodeData[] data = new BucketNodeData[runSize];
+      System.out.println("hi");
+      //skip to start of run
+      count = 0;
+      while (count != root[hash]) {
+        bufferedReader.readLine();
+        count++;
+      }
+      System.out.println("hi");
+      for (int i = 0; i < runSize; i++) {
+        line = bufferedReader.readLine();
+        String[] values = line.split("\t", 2);
+        data[i] = new BucketNodeData(values[0], values[1]);
+      }
+      reader.close();
+
+      //return binary search on data
+      Comparator<BucketNodeData> c = new Comparator<BucketNodeData>() {
+        public int compare(BucketNodeData u1, BucketNodeData u2)
+        {
+            return u1.key.compareTo(u2.key);
+        }
+      };
+      int index = binarySearch(data, 0, data.length-1, key);
+      if (index != -1) {
+        return data[index].value;
+      } else {
+        return "";
+      }
+    } catch (IOException e) {
+      System.out.println("File error");
     }
 
-    //TODO implement disk search
-    return "Not found :(";
+    return "";
+  }
+
+  //simple binary search implementation from https://www.geeksforgeeks.org/binary-search/
+  public int binarySearch(BucketNodeData [] data, int l, int r, String key) {
+    if (r >= l) {
+      int mid = l + (r-l)/2;
+
+      // If the element is present at the middle
+      // itself
+      if (data[mid].key.equals(key))
+          return mid;
+
+      // If element is smaller than mid, then
+      // it can only be present in left subarray
+      if (data[mid].key.compareTo(key) > 0)
+          return binarySearch(data, l, mid - 1, key);
+
+      // Else the element can only be present
+      // in right subarray
+      return binarySearch(data, mid + 1, r, key);
+  }
+
+  // We reach here when element is not
+  // present in array
+  return -1;
   }
 
   //adds ned BucketNode to end of linked list in c0 at the specified index
