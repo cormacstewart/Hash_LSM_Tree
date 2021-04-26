@@ -16,11 +16,11 @@ public class Hash_LSM_Driver {
       System.out.println("");
       switch (c) {
         case 'a':
-          for (int i = 0; i < 10; i++) {
+          for (int i = 0; i < 100000; i++) {
             lsm.insert(RandomString.getAlphaNumericString(5), RandomString.getAlphaNumericString(3));
           }
           System.out.println("current state of c0:");
-          lsm.printC0();
+          //lsm.printC0();
           System.out.println("");
           break;
         case 's':

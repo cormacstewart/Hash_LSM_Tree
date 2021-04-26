@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class Hash_LSM {
-  public final int TABLE_SIZE = 5; //number of values to take before flushing to disk
+  public final int TABLE_SIZE = 10000; //number of values to take before flushing to disk
   public BucketNode[] c0; //c0 is a hash table that writes to disk when it reaches capacity
   public int c0_count; //count stores the current number of values in c0
 
@@ -48,8 +48,6 @@ public class Hash_LSM {
     
     //check if c0 has space
     if (c0_count == TABLE_SIZE) {
-      System.out.println("Writing c0 to disk");
-      printC0();
       writeToDisk();
     }
 
