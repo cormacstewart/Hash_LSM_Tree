@@ -40,7 +40,7 @@ public class Hash_LSM_Timer {
     }
     endTime = System.currentTimeMillis();
     elapsed = (double)(endTime - startTime)/1000;
-    System.out.println("LSM inset time: " + elapsed);
+    System.out.println("LSM insert time: " + elapsed);
 
     //test control search
     startTime = System.currentTimeMillis();

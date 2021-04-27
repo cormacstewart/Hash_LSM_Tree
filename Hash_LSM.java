@@ -120,12 +120,6 @@ public class Hash_LSM {
       reader.close();
 
       //return binary search on data
-      Comparator<BucketNodeData> c = new Comparator<BucketNodeData>() {
-        public int compare(BucketNodeData u1, BucketNodeData u2)
-        {
-            return u1.key.compareTo(u2.key);
-        }
-      };
       int index = binarySearch(data, 0, data.length-1, key);
       if (index != -1) {
         return data[index].value;
@@ -157,14 +151,14 @@ public class Hash_LSM {
       // Else the element can only be present
       // in right subarray
       return binarySearch(data, mid + 1, r, key);
+    }
+
+    // We reach here when element is not
+    // present in array
+    return -1;
   }
 
-  // We reach here when element is not
-  // present in array
-  return -1;
-  }
-
-  //adds ned BucketNode to end of linked list in c0 at the specified index
+  //adds new BucketNode to end of linked list in c0 at the specified index
   public void addToList (int index, String key, String value) {
     BucketNode cur = c0[index];
     while (cur.next != null) {
